@@ -13,15 +13,11 @@ import plotly.express as px
 import datetime
 import spacy
 from spacy.cli import download
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    
-    download("en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
 
 
-nlp = spacy.load("en_core_web_sm")
+
+nlp = spacy.load("nlp = spacy.load("models/en-core-web-sm-3.8.0")
+.dist-info")
 
 st.set_page_config(page_title="News Sentiment Analysis", layout="wide")
 st.title("📰 News Sentiment & NER Analyzer")
