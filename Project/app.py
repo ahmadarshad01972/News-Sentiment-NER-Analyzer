@@ -16,7 +16,7 @@ from spacy.cli import download
 
 
 
-nlp = spacy.load("nlp = spacy.load("models/en-core-web-sm-3.8.0")
+nlp = spacy.load("models/en-core-web-sm-3.8.0")
 .dist-info")
 
 st.set_page_config(page_title="News Sentiment Analysis", layout="wide")
