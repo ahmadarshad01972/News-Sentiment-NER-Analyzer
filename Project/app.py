@@ -8,10 +8,18 @@ import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
 from deep_translator import GoogleTranslator
 from wordcloud import WordCloud, STOPWORDS
-import spacy
 import pandas as pd
 import plotly.express as px
 import datetime
+import spacy
+from spacy.cli import download
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
 
 nlp = spacy.load("en_core_web_sm")
 
