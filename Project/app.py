@@ -8,15 +8,19 @@ import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
 from deep_translator import GoogleTranslator
 from wordcloud import WordCloud, STOPWORDS
+import spacy
+from spacy.cli import download
 import pandas as pd
 import plotly.express as px
 import datetime
-import spacy
-from spacy.cli import download
+from io import StringIO
 
-
-
-nlp = spacy.load("models/en-core-web-sm-3.8.0.dist-info")
+# Ensure spaCy model is available
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 
 st.set_page_config(page_title="News Sentiment Analysis", layout="wide")
 st.title("📰 News Sentiment & NER Analyzer")
@@ -120,17 +124,18 @@ if analyze_button:
                 if ents:
                     with st.expander(f"{text}"):
                         for ent, label in ents:
-                            st.write(f"- {ent} ({label})")
+                            st.markdown(f"<span style='color:green'>• {ent}</span> (<code>{label}</code>)", unsafe_allow_html=True)
 
     # Data table
     with tab5:
         st.subheader("All Analyzed Headlines")
-        st.dataframe(pd.DataFrame(json_results))
+        df_all = pd.DataFrame(json_results)
+        st.dataframe(df_all)
 
-    # Export options
-    st.download_button("Download JSON", json.dumps(json_results, indent=2), file_name="headlines.json")
+    # Download CSV
+    csv_buffer = StringIO()
+    df_all.to_csv(csv_buffer, index=False)
+    st.download_button("Download CSV", csv_buffer.getvalue(), file_name="headlines.csv", mime="text/csv")
 
-    csv_file = csv.DictWriter(open("headlines.csv", "w", newline="", encoding="utf-8"), fieldnames=["Headline", "Translated", "Sentiment", "Polarity", "Subjectivity"])
-    csv_file.writeheader()
-    csv_file.writerows(json_results)
-    st.success("CSV saved as headlines.csv")
+    # Download JSON
+    st.download_button("Download JSON", json.dumps(json_results, indent=2), file_name="headlines.json", mime="application/json")
