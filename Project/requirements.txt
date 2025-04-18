@@ -6,7 +6,6 @@ wordcloud
 textblob
 langdetect
 googletrans==4.0.0-rc1
-spacy
 requests
 bs4
 deep_translator
