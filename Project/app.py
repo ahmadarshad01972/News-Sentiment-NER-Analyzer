@@ -12,12 +12,8 @@ import pandas as pd
 import plotly.express as px
 import datetime
 from io import StringIO
-
-# Ensure spaCy model is available
-try:
-    nlp = spacy.load("en_core_web_sm")
-except:
-    st.error("spaCy model 'en_core_web_sm' is not installed. Please check requirements.txt.")
+import spacy
+nlp = spacy.load("en_core_web_sm")
 
 st.set_page_config(page_title="News Sentiment Analysis", layout="wide")
 st.title("📰 News Sentiment & NER Analyzer")
