@@ -1,20 +1,23 @@
 import streamlit as st
 import requests
 import json
-import csv
 from bs4 import BeautifulSoup
 from textblob import TextBlob
 import matplotlib.pyplot as plt
-from collections import Counter, defaultdict
+from collections import defaultdict
 from deep_translator import GoogleTranslator
 from wordcloud import WordCloud, STOPWORDS
-import en_core_web_sm
+import spacy
 import pandas as pd
 import plotly.express as px
 import datetime
 from io import StringIO
 
-nlp = en_core_web_sm.load()
+# Ensure spaCy model is available
+try:
+    nlp = spacy.load("en_core_web_sm")
+except:
+    st.error("spaCy model 'en_core_web_sm' is not installed. Please check requirements.txt.")
 
 st.set_page_config(page_title="News Sentiment Analysis", layout="wide")
 st.title("📰 News Sentiment & NER Analyzer")
