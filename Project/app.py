@@ -8,22 +8,13 @@ import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
 from deep_translator import GoogleTranslator
 from wordcloud import WordCloud, STOPWORDS
-import spacy
-import subprocess
-import importlib.util
+import en_core_web_sm
 import pandas as pd
 import plotly.express as px
 import datetime
 from io import StringIO
 
-# Install spaCy model if not found (works on Streamlit Cloud)
-model_name = "en_core_web_sm"
-try:
-    nlp = spacy.load(model_name)
-except:
-    subprocess.run(["python", "-m", "spacy", "download", model_name])
-    importlib.util.invalidate_caches()
-    nlp = spacy.load(model_name)
+nlp = en_core_web_sm.load()
 
 st.set_page_config(page_title="News Sentiment Analysis", layout="wide")
 st.title("📰 News Sentiment & NER Analyzer")
