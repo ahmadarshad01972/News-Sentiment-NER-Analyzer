@@ -1,12 +1,12 @@
 streamlit
+pandas
+numpy==1.24.4
+matplotlib
+plotly
+wordcloud
+deep-translator
 requests
 beautifulsoup4
-textblob
-matplotlib
-deep-translator
-wordcloud
-spacy==3.8.0
-pandas
-plotly
 lxml
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+spacy==3.7.2
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz
