@@ -5,6 +5,7 @@ textblob
 matplotlib
 deep-translator
 wordcloud
-spacy
+spacy==3.8.0
 pandas
 plotly
+lxml
