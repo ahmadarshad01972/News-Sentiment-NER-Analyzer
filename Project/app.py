@@ -9,23 +9,26 @@ from collections import Counter, defaultdict
 from deep_translator import GoogleTranslator
 from wordcloud import WordCloud, STOPWORDS
 import spacy
-from spacy.cli import download
+import subprocess
+import importlib.util
 import pandas as pd
 import plotly.express as px
 import datetime
 from io import StringIO
 
-# Ensure spaCy model is available
+# Install spaCy model if not found (works on Streamlit Cloud)
+model_name = "en_core_web_sm"
 try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    download("en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
+    nlp = spacy.load(model_name)
+except:
+    subprocess.run(["python", "-m", "spacy", "download", model_name])
+    importlib.util.invalidate_caches()
+    nlp = spacy.load(model_name)
 
 st.set_page_config(page_title="News Sentiment Analysis", layout="wide")
 st.title("📰 News Sentiment & NER Analyzer")
 
-# Sidebar options
+# Sidebar
 with st.sidebar:
     query = st.text_input("Search Bing News for:", value="Technology")
     target_lang = st.selectbox("Translate to language:", ['en', 'es', 'fr', 'ur'])
@@ -38,7 +41,6 @@ with st.sidebar:
         st.write("This tool fetches Bing News, analyzes sentiment and named entities, and displays results in charts and tables.")
     analyze_button = st.button("Analyze")
 
-# Optional dark theme
 if theme == "Dark":
     st.markdown("""
         <style>
@@ -46,7 +48,7 @@ if theme == "Dark":
         </style>
         """, unsafe_allow_html=True)
 
-# Main analysis block
+# Main logic
 if analyze_button:
     url = f"https://www.bing.com/news/search?q={query}"
     response = requests.get(url)
@@ -59,7 +61,6 @@ if analyze_button:
     noun_phrases = []
     sentiments = {"Positive": 0, "Neutral": 0, "Negative": 0}
 
-    # Analyze each headline
     for text in headlines:
         blob = TextBlob(text)
         sentiment = "Neutral"
@@ -88,10 +89,8 @@ if analyze_button:
                     word_freq[word] += 1
             noun_phrases.extend(blob.noun_phrases)
 
-    # Tabs for different views
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Sentiment", "☁️ Word Cloud", "🔑 Keywords", "🧠 Named Entities", "📋 Data Table"])
 
-    # Sentiment pie chart
     with tab1:
         st.subheader("Sentiment Summary")
         df_sent = pd.DataFrame.from_dict(sentiments, orient='index', columns=['Count']).reset_index()
@@ -99,13 +98,11 @@ if analyze_button:
         fig = px.pie(df_sent, names='Sentiment', values='Count', title='Sentiment Distribution')
         st.plotly_chart(fig, use_container_width=True)
 
-    # Word cloud
     with tab2:
         st.subheader("Word Cloud")
         cloud = WordCloud(width=800, height=400, background_color='black', stopwords=STOPWORDS).generate(" ".join(selected))
         st.image(cloud.to_array())
 
-    # Top keywords bar chart
     with tab3:
         st.subheader("Top Keywords")
         top_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)[:10]
@@ -114,7 +111,6 @@ if analyze_button:
         st.plotly_chart(fig_keywords, use_container_width=True)
         st.write(df_keywords)
 
-    # Named Entity Recognition
     if show_ner:
         with tab4:
             st.subheader("Named Entities")
@@ -126,16 +122,13 @@ if analyze_button:
                         for ent, label in ents:
                             st.markdown(f"<span style='color:green'>• {ent}</span> (<code>{label}</code>)", unsafe_allow_html=True)
 
-    # Data table
     with tab5:
         st.subheader("All Analyzed Headlines")
         df_all = pd.DataFrame(json_results)
         st.dataframe(df_all)
 
-    # Download CSV
     csv_buffer = StringIO()
     df_all.to_csv(csv_buffer, index=False)
     st.download_button("Download CSV", csv_buffer.getvalue(), file_name="headlines.csv", mime="text/csv")
 
-    # Download JSON
     st.download_button("Download JSON", json.dumps(json_results, indent=2), file_name="headlines.json", mime="application/json")
