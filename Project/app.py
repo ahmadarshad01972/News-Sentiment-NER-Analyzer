@@ -11,14 +11,7 @@ import pandas as pd
 import plotly.express as px
 import datetime
 import io
-import nltk
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('brown')
-nltk.download('wordnet')
 
-from textblob import download_corpora
-download_corpora()
 
 
 
