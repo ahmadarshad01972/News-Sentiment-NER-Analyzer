@@ -11,3 +11,4 @@ bs4
 deep_translator
 plotly
 lxml
+nltk
