@@ -11,7 +11,10 @@ import pandas as pd
 import plotly.express as px
 import datetime
 import io
-
+import nltk
+nltk.download('brown')
+import textblob
+textblob.download_corpora()
 
 
 
