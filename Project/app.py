@@ -11,6 +11,12 @@ import pandas as pd
 import plotly.express as px
 import datetime
 import io
+import nltk
+nltk.download('brown')
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+
 
 # Load spaCy model
 
