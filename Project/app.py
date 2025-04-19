@@ -11,7 +11,6 @@ import pandas as pd
 import plotly.express as px
 import datetime
 import io
-
 # Load spaCy model
 
 
@@ -79,7 +78,7 @@ if analyze_button:
                     word_freq[word] += 1
             #noun_phrases.extend(blob.noun_phrases)
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Sentiment", "☁️ Word Cloud", "🔑 Keywords", "🧠 Named Entities", "📋 Data Table"])
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📈 Sentiment", "☁️ Word Cloud", "🔑 Keywords", "🧠 Named Entities", "📋 Data Table", "ℹ️ About"])
 
     # Tab 1: Sentiment chart
     with tab1:
@@ -89,10 +88,15 @@ if analyze_button:
         st.plotly_chart(fig, use_container_width=True)
 
     # Tab 2: Word Cloud
+    # Tab 2: Word Cloud
     with tab2:
         st.subheader("Word Cloud")
-        wc = WordCloud(width=800, height=400, background_color='black', stopwords=STOPWORDS).generate(" ".join(selected_texts))
-        st.image(wc.to_array())
+        if selected_texts:
+            wc = WordCloud(width=800, height=400, background_color='black', stopwords=STOPWORDS).generate(" ".join(selected_texts))
+            st.image(wc.to_array())
+        else:
+            st.warning("No headlines available to generate a word cloud.")
+
 
     # Tab 3: Keywords
     with tab3:
@@ -103,23 +107,27 @@ if analyze_button:
         st.plotly_chart(fig_kw, use_container_width=True)
         st.write(df_kw)
 
-    # Tab 4: Named Entity Recognition
+    
+        # Tab 4: Named Entity Recognition
     if show_ner:
         with tab4:
             st.subheader("Named Entities")
             st.header(" 🚧Under Construction 🚧")
-            for text in selected_texts:
-                #doc = nlp(text)
-                ents_html = ""
-                #for token in doc:
-                    #if token.ent_type_:
-                        #ents_html += f'<mark style="background-color:#ffeaa7; padding:2px 4px; margin:1px; border-radius:3px;">{token.text} <sub>({token.ent_type_})</sub></mark> '
-                    #else:
-                        #ents_html += token.text + " "
-                #st.markdown(f"**{text}**", unsafe_allow_html=True)
-                #st.markdown(ents_html, unsafe_allow_html=True)
+            
+            st.markdown("""
+<div style='background-color:#2c2f33; color:#f1f1f1; padding:15px; border-left:5px solid #f39c12; border-radius:10px; font-size:16px;'>
+    <strong>Note:</strong> We initially planned to use <code style="background-color:#1e1e1e; color:#2ecc71;">spaCy</code> for broader NLP tasks, 
+    but due to limitations on platforms like Streamlit Cloud where some models can't be loaded easily, 
+    we use <code style="background-color:#1e1e1e; color:#2ecc71;">spaCy</code> only for Named Entity Recognition (NER). 
+    This ensures that we retain key features without affecting deployment.
+</div>
+""", unsafe_allow_html=True)
+
+
+
 
     # Tab 5: Table and Download
+        # Tab 5: Table and Download
     with tab5:
         st.subheader("Analyzed Headlines")
         df = pd.DataFrame(results)
@@ -132,3 +140,28 @@ if analyze_button:
 
         # JSON download
         st.download_button("⬇️ Download JSON", json.dumps(results, indent=2), file_name="headlines.json", mime="application/json")
+
+    # Tab 6: About
+    with tab6:
+        st.markdown("<h2 style='color:#4CAF50;'>About This App</h2>", unsafe_allow_html=True)
+        st.markdown("""
+        This app performs **sentiment analysis** and **named entity recognition (NER)** on Bing News headlines.
+
+        #### 🔍 Features:
+        - Live scraping of news using Bing
+        - Sentiment detection with visualizations
+        - Word Cloud generation
+        - Entity highlighting using spaCy
+        - Multi-language translation
+
+        ---
+
+        #### 👨‍💻 Developer Info:
+        <a href="https://github.com/ahmadarshad01972" target="_blank">
+            <img src="https://img.shields.io/badge/GitHub-ahmadarshad01972-181717?style=for-the-badge&logo=github" height="30">
+        </a>
+        &nbsp;
+        <a href="https://www.linkedin.com/in/ahmad-arshad-04b473322/" target="_blank">
+            <img src="https://img.shields.io/badge/LinkedIn-Ahmad%20Arshad-0077B5?style=for-the-badge&logo=linkedin" height="30">
+        </a>
+        """, unsafe_allow_html=True)
