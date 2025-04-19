@@ -12,12 +12,14 @@ import plotly.express as px
 import datetime
 import io
 import nltk
-
-# These lines ensure required NLTK data is available, especially on Streamlit Cloud
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('brown')
 nltk.download('wordnet')
+
+from textblob import download_corpora
+download_corpora()
+
 
 
 # Load spaCy model
