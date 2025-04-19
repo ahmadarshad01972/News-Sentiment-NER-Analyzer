@@ -11,8 +11,6 @@ import pandas as pd
 import plotly.express as px
 import datetime
 import io
-import nltk
-
 
 # Load spaCy model
 
