@@ -77,7 +77,7 @@ if analyze_button:
             for word in text.lower().split():
                 if word not in STOPWORDS and len(word) > 1:
                     word_freq[word] += 1
-            noun_phrases.extend(blob.noun_phrases)
+            #noun_phrases.extend(blob.noun_phrases)
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Sentiment", "☁️ Word Cloud", "🔑 Keywords", "🧠 Named Entities", "📋 Data Table"])
 
